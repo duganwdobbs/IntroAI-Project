@@ -12,6 +12,9 @@ num_sols = [1, 0, 0, 2, 10, 4, 40, 92, 352, 724, 2680, 14200, 73712, 365596, 227
 global solutions
 solutions = []
 
+global tourn_size
+tourn_size = int(math.log2(pop_size - 1)) + 2
+
 def nCr(n,r):
   f = math.factorial
   return f(n) // (f(r) * f(n-r))
@@ -91,7 +94,74 @@ def crossover_3tournament(inds,population):
       if parent1[y] == parent2[y]:
         child[y] = parent1[y]
     childs.append(child)
-  return childs
+  temp = []
+  for child in childs:
+    for single in child:
+      temp.append(single)
+  return temp
+
+def march_madness(fitness,population):
+  global pop_size # We need to change this global, not make a new one.
+  pop_size = 2 ** (tourn_size-2)
+  # Receives fitness and states, pairs, then sorts in desc
+  paired  = [[fitness[x],population[x]] for x in range(len(population))]
+  sorting = sorted(paired,key = lambda val: val[0])
+  sorting = sorting[::-1]
+
+  tourn_pop = march_selection(sorting)
+  children   = march_crossover(tourn_pop)
+
+  return children
+
+def march_selection(sorting):
+  # Throwing out the lower amount
+  sorting = sorting[0:pop_size]
+
+  # Creating a proper tiered structure, so first and second seed appear on
+  # opposite ends
+  for x in range(1,len(sorting) // 2):
+    sorting[x],sorting[-x] = sorting[-x],sorting[x]
+  return sorting
+
+def march_crossover(tourn_pop):
+  children = []
+  while len(tourn_pop) > 1:
+    next_tier = []
+    #Tournament Tier
+    for x in range(len(tourn_pop)//2):
+      new_child,winner = march_tourn(tourn_pop[2*x],tourn_pop[2*x+1])
+      if winner == 0:
+        next_tier.append(tourn_pop[2*x])
+      else:
+        next_tier.append(tourn_pop[2*x+1])
+      children.append(new_child)
+    tourn_pop = next_tier
+
+  # Winner added to new population
+  children.append(tourn_pop[0][1])
+
+  return children
+
+
+def march_tourn(team1,team2):
+
+  fit1, parent1 = team1
+  fit2, parent2 = team2
+  eps           = fit1 + fit2 + 1e-5
+  fit1,fit2 = fit1 / eps,fit2/eps
+  winner = 1
+
+  # Generate a random percentage and see if team2 wins intead of team1
+  if random.random() > fit1:
+    winner = 0
+
+  for x in range(2):
+    child = np.random.uniform(size = (board_size),low = 0, high = board_size)
+    child = child.astype(np.int32)
+    for y in range(board_size):
+      if parent1[y] == parent2[y]:
+        child[y] = parent1[y]
+  return child,winner
 
 def single_mutation(child):
   rand = random.randint(0,100)
@@ -109,27 +179,21 @@ def double_mutation(child):
 def main():
   population = init_states(board_size,pop_size)
   iter = 0
-  solutions = []
   while len(solutions) +1 < num_sols[board_size-1] :
     iter += 1
     fitness = []
     fitness = gen_fitness(population)
 
-    paired  = [[fitness[x],population[x]] for x in range(pop_size)]
-    sorting = sorted(paired,key = lambda val: val[0])
-    sorting = sorting[::-1]
+    children = march_madness(fitness,population)
 
-    inds     = [[selection_tournament(fitness,2),selection_tournament(fitness,2)] for x in range(len(sorting) // 2)]
-    children = [crossover_3tournament(ind,population) for ind in inds]
-    temp = []
-    for child in children:
-      for single in child:
-        temp.append(single)
-    children = temp
+    # inds     = [[selection_tournament(fitness,2),selection_tournament(fitness,2)] for x in range(len(fitness) // 2)]
+    # children = [crossover_3tournament(ind,population) for ind in inds]
+
     children = [single_mutation(child) for child in children]
     if iter%100 == 0:
       print("Iteration %d"%iter)
     population = children
-  [print(solultion) for solution in solutions]
+  [print(solution) for solution in solutions]
+  print("FOUND IN %d ITERATIONS, %d TOTAL INDIVIDUALS"%(iter,iter * pop_size))
 
 main()
