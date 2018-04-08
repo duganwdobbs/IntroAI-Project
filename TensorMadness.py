@@ -48,21 +48,23 @@ def kernel_generation():
 
 def get_fitness(population):
   with tf.variable_scope("FitnessGeneration") as scope:
-    pops = tf.one_hot(population,board_size)
-    pops = tf.reshape(pops,[pop_size,board_size,board_size])
+    ohops = tf.one_hot(population,board_size)
+    tf.summary.image("Board",tf.reshape(ohops*255,[pop_size,board_size,board_size,1]))
+    pops = tf.reshape(ohops,[pop_size,board_size,board_size])
     pad_pops=[]
     for x in range(pop_size):
-      pad_pops.append(tf.pad(pops[x],([board_size-1,board_size-1],[0,board_size])))
+      pad_pops.append(tf.pad(pops[x],([board_size-1,board_size-1],[0,board_size-1])))
     pops = tf.stack(pad_pops)
     pops = tf.reshape(pops,[pops.shape[0].value,pops.shape[1].value,pops.shape[2].value,1])
     kern = kernel_generation()
     costs = tf.nn.conv2d(pops,kern,[1,1,1,1],padding='VALID')
     costs = tf.squeeze(costs)
+    costs = ohops * costs
     # Reduce along x and y to have a batch size length tensor of total costs.
     costs = tf.reduce_sum(costs,-1)
     costs = tf.reduce_sum(costs,-1)
     fitness = nCr(board_size,2) - costs
-    return fitness
+    return fitness,costs
 
 def get_tops(population,fitness):
   with tf.variable_scope("GetTops") as scope:
@@ -75,15 +77,16 @@ def march_madness(population,fitness):
     children = []
     bracket=0
     while population.shape[0].value > 1:
-      bracket+=1
-      winners  = []
-      print("Tournament size: %d"%population.shape[0].value)
-      for x in range(population.shape[0] // 2):
-        print("Bracket %d; Creating match %d / %d"%(bracket,x,population.shape[0] // 2))
-        child,winner = match(population[x],fitness[x],population[-(x+1)],fitness[-(x+1)])
-        children.append(child)
-        winners.append(winner)
-      population = tf.stack(winners)
+      with tf.variable_scope("Tier_%d"%bracket) as scope:
+        bracket+=1
+        winners  = []
+        print("Tournament size: %d"%population.shape[0].value)
+        for x in range(population.shape[0] // 2):
+          print("Bracket %d; Creating match %d / %d"%(bracket,x,population.shape[0] // 2))
+          child,winner = match(population[x],fitness[x],population[-(x+1)],fitness[-(x+1)])
+          children.append(child)
+          winners.append(winner)
+        population = tf.stack(winners)
     # append the tournament victor to the pool
     children.append(tf.squeeze(population))
     children = tf.stack(children,0)
@@ -103,29 +106,41 @@ def match(pop1,fit1,pop2,fit2):
 def tf_genetic_algo():
   with tf.Graph().as_default():
     sess          = tf.Session()
-    population    = tf.placeholder(shape=[pop_size,board_size],name = 'population',dtype=tf.int32)
+
+    pop_shape  = [pop_size,board_size]
+    population = tf.get_variable("population",shape = pop_shape,dtype=tf.int32,initializer=tf.random_uniform_initializer(minval=0,maxval=board_size,dtype=tf.int32))
+    # population      = tf.random_uniform(pop_shape,minval=0,maxval=board_size,dtype = tf.int32,name = 'population')
+    # population    = tf.placeholder(shape=[pop_size,board_size],name = 'population',dtype=tf.int32)
+
     print("Creating fitness operation...")
-    fitness       = get_fitness(population)
+    fitness,costs = get_fitness(population)
     print("Creating top populations operation...")
     top_fits,inds = get_tops(population,fitness)
     print("Creating new population operation... (Selection, crossover, mutation)")
     children      = march_madness(population,fitness)
+    population = population.assign(children)
+
+    sess.run(tf.local_variables_initializer())
+    sess.run(tf.global_variables_initializer())
     print("Done initialing graph operations...")
 
     step      = 0
     solutions = []
     new_pop = np.random.uniform(size = (2**pop_power,board_size),low = 0, high = board_size)
+    summaries = tf.summary.merge_all()
+    writer    = tf.summary.FileWriter("./",sess.graph)
+    print("Initalzing GPU operations...")
 
 
-    run_op = [children,top_fits,inds]
+    run_op = [population,top_fits,inds,summaries]
     while len(solutions) < num_sols[board_size]:
       step +=1
       print("Iteration %d"%step)
-      new_pop,_top_fits,_inds = sess.run(run_op,feed_dict = {population:new_pop})
-      print(_top_fits)
+      _,_top_fits,_inds,_summ = sess.run(run_op)
+      writer.add_summary(_summ,step)
       for x in range(len(_top_fits)):
         if _top_fits[x] == nCr(board_size,2):
           solutions.append("Some solution?")
-          print(solutions)
+          print("Some solution found, total %d"%len(solutions))
 
 tf_genetic_algo()
