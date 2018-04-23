@@ -1,0 +1,41 @@
+=>PYTHONTEX#py#default#default#0#code#####215#
+arr =[0, 5, 1, 8, 6, 3, 7, 2, 4]
+for row in range(len(arr)):
+  for col in range(len(arr)):
+    n = row + col
+    if n // 2 == n / 2:
+      if arr[row] == col:
+        print(r"\includegraphics[width=.5cm]{Pictures/BQWT.jpg}",end=' ')
+      else:
+        print(r"\includegraphics[width=.5cm]{Pictures/WT.jpg}",end=' ')
+    else:
+      if arr[row] == col:
+        print(r"\includegraphics[width=.5cm]{Pictures/WQBT.jpg}",end=' ')
+      else:
+        print(r"\includegraphics[width=.5cm]{Pictures/BT.jpg}",end=' ')
+  print(r" \\ ")
+=>PYTHONTEX:SETTINGS#
+version=0.16
+outputdir=pythontex-files-main
+workingdir=.
+workingdirset=false
+gobble=none
+rerun=default
+hashdependencies=default
+makestderr=false
+stderrfilename=full
+keeptemps=none
+pyfuture=default
+pyconfuture=none
+pygments=true
+pygglobal=:GLOBAL||
+fvextfile=-1
+pyconbanner=none
+pyconfilename=stdin
+depythontex=false
+pygfamily=py|python|
+pygfamily=pycon|pycon|
+pygfamily=sympy|python|
+pygfamily=sympycon|pycon|
+pygfamily=pylab|python|
+pygfamily=pylabcon|pycon|

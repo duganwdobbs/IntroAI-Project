@@ -209,28 +209,31 @@ The proposed March Madness selection tournament is inspired by the March Madness
   \end{algorithmic}
 \end{algorithm}
 
-\begin{figure}
+\def\arraystretch{0.00}
+{\renewcommand{\arraystretch}{0}%
+\begin{figure*}[htb]
 \begin{pycode}
-%Hello Jon. This code won't work in overleaf, but it does on a local install. It displays a board defined by arr. Just slap it in and it'll work.
-arr = [0,1,2,3,4,5,6,7]
-for row in xrange(len(arr)):
-  for col in xrange(len(arr)):
+arr =[0, 5, 1, 8, 6, 3, 7, 2, 4]
+for row in range(len(arr)):
+  for col in range(len(arr)):
     n = row + col
     if n // 2 == n / 2:
-    if arr[row] == col:
-      print(r"\includegraphics[width=2cm]{Pictures/BQWT.jpg}")
+      if arr[row] == col:
+        print(r"\includegraphics[width=.5cm]{Pictures/BQWT.jpg}",end=' ')
+      else:
+        print(r"\includegraphics[width=.5cm]{Pictures/WT.jpg}",end=' ')
     else:
-      print(r"\includegraphics[width=2cm]{Pictures/WT.jpg}")
-    else:
-    if arr[row] == col:
-      print(r"\includegraphics[width=2cm]{Pictures/WQBT.jpg}")
-    else:
-      print(r"\includegraphics[width=2cm]{Pictures/BT.jpg}")
+      if arr[row] == col:
+        print(r"\includegraphics[width=.5cm]{Pictures/WQBT.jpg}",end=' ')
+      else:
+        print(r"\includegraphics[width=.5cm]{Pictures/BT.jpg}",end=' ')
+  print(r" \\ ")
 \end{pycode}
 \label{fig:board1}
 \caption{There is supposed to be a board here...}
-\end{figure}
-
+\label{tab:Images}
+\end{figure*}
+}
 \section{Related Works}
 A study performed by Uddalok Sarkar and Sayan Nag uses an adaptive genetic algorithm to solve the n-queens problem. They utilize the same principles as stated in the introduction in their genetic algorithm. They use the same fitness function and similar selection of population than the algorithm that will be discussed in this paper, but the elegant step they take is comparing the offspring to the current population and determining if the offspring is fit enough to survive the next generation. If it is not, the offspring is discarded so that its genetics are not added to the gene pool. The results of their algorithm showed that the algorithm only need to perform 1431 iterations to find all solutions for an N of 25. 
 
