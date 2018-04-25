@@ -1,5 +1,37 @@
-=>PYTHONTEX#py#default#default#0#code#####215#
-arr =[0, 5, 1, 8, 6, 3, 7, 2, 4]
+=>PYTHONTEX#py#default#default#0#code#####218#
+arr =[6, 3, 0, 7, 5, 2, 9, 1, 8, 4]
+for row in range(len(arr)):
+  for col in range(len(arr)):
+    n = row + col
+    if n // 2 == n / 2:
+      if arr[row] == col:
+        print(r"\includegraphics[width=.5cm]{Pictures/BQWT.jpg}",end=' ')
+      else:
+        print(r"\includegraphics[width=.5cm]{Pictures/WT.jpg}",end=' ')
+    else:
+      if arr[row] == col:
+        print(r"\includegraphics[width=.5cm]{Pictures/WQBT.jpg}",end=' ')
+      else:
+        print(r"\includegraphics[width=.5cm]{Pictures/BT.jpg}",end=' ')
+  print(r" \\ ")
+=>PYTHONTEX#py#default#default#1#code#####245#
+arr =[0, 5, 3, 1, 6, 8, 2, 4, 7]
+for row in range(len(arr)):
+  for col in range(len(arr)):
+    n = row + col
+    if n // 2 == n / 2:
+      if arr[row] == col:
+        print(r"\includegraphics[width=.5cm]{Pictures/BQWT.jpg}",end=' ')
+      else:
+        print(r"\includegraphics[width=.5cm]{Pictures/WT.jpg}",end=' ')
+    else:
+      if arr[row] == col:
+        print(r"\includegraphics[width=.5cm]{Pictures/WQBT.jpg}",end=' ')
+      else:
+        print(r"\includegraphics[width=.5cm]{Pictures/BT.jpg}",end=' ')
+  print(r" \\ ")
+=>PYTHONTEX#py#default#default#2#code#####272#
+arr =[6, 4, 0, 5, 8, 2, 7, 3, 1]
 for row in range(len(arr)):
   for col in range(len(arr)):
     n = row + col

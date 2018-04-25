@@ -16,14 +16,13 @@ global num_sols
 num_sols = [1, 0, 0, 2, 10, 4, 40, 92, 352, 724, 2680, 14200, 73712, 365596, 2279184, 14772512, 95815104, 666090624, 4968057848, 39029188884, 314666222712, 2691008701644, 24233937684440, 227514171973736, 2207893435808352, 22317699616364044, 234907967154122528]
 
 global pop_power
-pop_power = 10
+pop_power = 7
 
 global board_size
 board_size = 8
 
 global pop_size
 pop_size = 2**pop_power
-
 
 def nCr(n,r):
   f = math.factorial
@@ -37,14 +36,22 @@ def init():
 def kernel_generation():
   center = board_size -1
   k_size = board_size + center
-  k_shape= [int(k_size),int(board_size),1,1]
+  k_shape= [int(board_size),int(k_size),1,1]
   kernel = np.zeros(k_shape,dtype=np.uint8)
-  for b in range(board_size):
-    kernel[center    ,b] = 1
-    kernel[center + b,b] = 1
-    kernel[center - b,b] = 1
-  kernel[center,0] = 0
-  return kernel
+  for b in range(1,board_size):
+    kernel[b,center,0,0]     = 1
+    kernel[b,center + b,0,0] = 1
+    kernel[b,center - b,0,0] = 1
+  kernel[0,center,0,0] = 0
+  # input(kernel)
+  return kernel # np.transpose(kernel, (1,0))
+
+def summary_image(ims,name,scale = False):
+  norm_ims = ims / nCr(board_size,2) * 255
+  temp = norm_ims
+  if not scale:
+    temp = tf.cast(temp,tf.uint8)
+  tf.summary.image(name,temp)
 
 def get_fitness(population):
   with tf.variable_scope("FitnessGeneration") as scope:
@@ -53,27 +60,32 @@ def get_fitness(population):
     pops = tf.reshape(ohops,[pop_size,board_size,board_size])
     pad_pops=[]
     for x in range(pop_size):
-      pad_pops.append(tf.pad(pops[x],([board_size-1,board_size-1],[0,board_size-1])))
+      pad_pops.append(tf.pad(pops[x],([0,board_size-1],[board_size-1,board_size-1])))
     pops = tf.stack(pad_pops)
     pops = tf.reshape(pops,[pops.shape[0].value,pops.shape[1].value,pops.shape[2].value,1])
+    # tf.summary.image("Paddings",pops)
     kern = kernel_generation()
     costs = tf.nn.conv2d(pops,kern,[1,1,1,1],padding='VALID')
+    summary_image(costs,"Costs",True)
     costs = tf.squeeze(costs)
+    costs = tf.round(costs)
     costs = ohops * costs
+    summary_image(tf.reshape(costs,[costs.shape[0].value,costs.shape[1].value,costs.shape[2].value,1]),"QCosts",True)
     # Reduce along x and y to have a batch size length tensor of total costs.
     costs = tf.reduce_sum(costs,-1)
     costs = tf.reduce_sum(costs,-1)
+    tf.summary.scalar("AvgCost",tf.reduce_mean(costs))
     fitness = nCr(board_size,2) - costs
     return fitness,costs
 
 def get_tops(population,fitness):
   with tf.variable_scope("GetTops") as scope:
-    top_fits,inds = tf.nn.top_k(fitness,10,sorted=False)
+    top_fits,inds = tf.nn.top_k(fitness,min(pop_size,10),sorted=False)
     # top_pops = tf.gather_nd(population,inds)
     return top_fits,inds
 
 def march_madness(population,fitness):
-  with tf.variable_scope("MartchMadness") as scope:
+  with tf.variable_scope("MarchMadness") as scope:
     children = []
     bracket=0
     while population.shape[0].value > 1:
@@ -119,28 +131,33 @@ def tf_genetic_algo():
     print("Creating new population operation... (Selection, crossover, mutation)")
     children      = march_madness(population,fitness)
     population = population.assign(children)
+    print("Initalzing graph variables...")
 
     sess.run(tf.local_variables_initializer())
     sess.run(tf.global_variables_initializer())
-    print("Done initialing graph operations...")
+    print("Initalzing summary and filewriter...")
 
     step      = 0
     solutions = []
-    new_pop = np.random.uniform(size = (2**pop_power,board_size),low = 0, high = board_size)
     summaries = tf.summary.merge_all()
     writer    = tf.summary.FileWriter("./",sess.graph)
     print("Initalzing GPU operations...")
 
 
-    run_op = [population,top_fits,inds,summaries]
+    run_op = [population,costs,top_fits,inds,summaries]
     while len(solutions) < num_sols[board_size]:
       step +=1
-      print("Iteration %d"%step)
-      _,_top_fits,_inds,_summ = sess.run(run_op)
+      _,_costs,_top_fits,_inds,_summ = sess.run(run_op)
       writer.add_summary(_summ,step)
+      # for x in range(len(_)):
+      # #   print(_[x],_costs[x])
+      # print(_inds)
+      # print(_top_fits)
       for x in range(len(_top_fits)):
         if _top_fits[x] == nCr(board_size,2):
           solutions.append("Some solution?")
+          print(_[_inds[x]],_costs[_inds[x]])
+          print(_inds[x])
           print("Some solution found, total %d"%len(solutions))
 
 tf_genetic_algo()

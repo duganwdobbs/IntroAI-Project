@@ -52,7 +52,7 @@ def main(board_size):
   print("Time:", solver.WallTime(), "ms")
 
 # By default, solve the 8x8 problem.
-board_size = 8
+board_size = 20
 
 if __name__ == "__main__":
   if len(sys.argv) > 1:

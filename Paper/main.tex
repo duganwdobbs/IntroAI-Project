@@ -209,11 +209,14 @@ The proposed March Madness selection tournament is inspired by the March Madness
   \end{algorithmic}
 \end{algorithm}
 
+
+
 \def\arraystretch{0.00}
 {\renewcommand{\arraystretch}{0}%
-\begin{figure*}[htb]
+\begin{figure}[htb]
+\centering
 \begin{pycode}
-arr =[0, 5, 1, 8, 6, 3, 7, 2, 4]
+arr =[6, 3, 0, 7, 5, 2, 9, 1, 8, 4]
 for row in range(len(arr)):
   for col in range(len(arr)):
     n = row + col
@@ -230,10 +233,66 @@ for row in range(len(arr)):
   print(r" \\ ")
 \end{pycode}
 \label{fig:board1}
-\caption{There is supposed to be a board here...}
+\caption{7x7 Board Solution}
 \label{tab:Images}
-\end{figure*}
+\end{figure}
 }
+
+\def\arraystretch{0.00}
+{\renewcommand{\arraystretch}{0}%
+\begin{figure}[htb]
+\centering
+\begin{pycode}
+arr =[0, 5, 3, 1, 6, 8, 2, 4, 7]
+for row in range(len(arr)):
+  for col in range(len(arr)):
+    n = row + col
+    if n // 2 == n / 2:
+      if arr[row] == col:
+        print(r"\includegraphics[width=.5cm]{Pictures/BQWT.jpg}",end=' ')
+      else:
+        print(r"\includegraphics[width=.5cm]{Pictures/WT.jpg}",end=' ')
+    else:
+      if arr[row] == col:
+        print(r"\includegraphics[width=.5cm]{Pictures/WQBT.jpg}",end=' ')
+      else:
+        print(r"\includegraphics[width=.5cm]{Pictures/BT.jpg}",end=' ')
+  print(r" \\ ")
+\end{pycode}
+\label{fig:board2}
+\caption{7x7 Board Solution}
+\label{tab:Images}
+\end{figure}
+}
+
+\def\arraystretch{0.00}
+{\renewcommand{\arraystretch}{0}%
+\begin{figure}[htb]
+\centering
+\begin{pycode}
+arr =[6, 4, 0, 5, 8, 2, 7, 3, 1]
+for row in range(len(arr)):
+  for col in range(len(arr)):
+    n = row + col
+    if n // 2 == n / 2:
+      if arr[row] == col:
+        print(r"\includegraphics[width=.5cm]{Pictures/BQWT.jpg}",end=' ')
+      else:
+        print(r"\includegraphics[width=.5cm]{Pictures/WT.jpg}",end=' ')
+    else:
+      if arr[row] == col:
+        print(r"\includegraphics[width=.5cm]{Pictures/WQBT.jpg}",end=' ')
+      else:
+        print(r"\includegraphics[width=.5cm]{Pictures/BT.jpg}",end=' ')
+  print(r" \\ ")
+\end{pycode}
+\label{fig:board3}
+\caption{7x7 Board Solution}
+\label{tab:Images}
+\end{figure}
+}
+
+
 \section{Related Works}
 A study performed by Uddalok Sarkar and Sayan Nag uses an adaptive genetic algorithm to solve the n-queens problem. They utilize the same principles as stated in the introduction in their genetic algorithm. They use the same fitness function and similar selection of population than the algorithm that will be discussed in this paper, but the elegant step they take is comparing the offspring to the current population and determining if the offspring is fit enough to survive the next generation. If it is not, the offspring is discarded so that its genetics are not added to the gene pool. The results of their algorithm showed that the algorithm only need to perform 1431 iterations to find all solutions for an N of 25. 
 
@@ -244,312 +303,6 @@ A study performed by Uddalok Sarkar and Sayan Nag uses an adaptive genetic algor
 Starting to copy paste results in, formatting comes later.
 
 
-%num_sols = [1, 0, 0, 2, 10, 4, 40, 92, 352, 724, 2680, 14200, 73712, 365596, 2279184, 14772512, 95815104, 666090624, 4968057848, 39029188884, 314666222712, 2691008701644, 24233937684440, 227514171973736, 2207893435808352, 22317699616364044, 234907967154122528]
-
-% Board size 4:
-% SOLUTION FOUND, 1 of 2 [2 0 3 1]
-% TIME: 0
-% SOLUTION FOUND, 2 of 2 [1 3 0 2]
-% TIME: 0
-% Found 1 iterations, 0 seconds, 8192 TOTAL INDIVIDUALS
-
-% Board size 5:
-% SOLUTION FOUND, 1 of 10 [4 1 3 0 2]
-% TIME: 0
-% SOLUTION FOUND, 2 of 10 [0 2 4 1 3]
-% TIME: 0
-% SOLUTION FOUND, 3 of 10 [2 4 1 3 0]
-% TIME: 0
-% SOLUTION FOUND, 4 of 10 [3 0 2 4 1]
-% TIME: 0
-% SOLUTION FOUND, 5 of 10 [1 4 2 0 3]
-% TIME: 0
-% SOLUTION FOUND, 6 of 10 [0 3 1 4 2]
-% TIME: 0
-% SOLUTION FOUND, 7 of 10 [2 0 3 1 4]
-% TIME: 0
-% SOLUTION FOUND, 8 of 10 [3 1 4 2 0]
-% TIME: 0
-% SOLUTION FOUND, 9 of 10 [1 3 0 2 4]
-% TIME: 0
-% SOLUTION FOUND, 10 of 10 [4 2 0 3 1]
-% TIME: 0
-% Found 1 iterations, 0 seconds, 8192 TOTAL INDIVIDUALS
-
-% Board size 6
-% SOLUTION FOUND, 1 of 4 [4 2 0 5 3 1]
-% TIME: 0
-% SOLUTION FOUND, 2 of 4 [3 0 4 1 5 2]
-% TIME: 1
-% SOLUTION FOUND, 3 of 4 [1 3 5 0 2 4]
-% TIME: 1
-% Found 4 iterations, 1 seconds, 32768 TOTAL INDIVIDUALS
-
-% 7
-% SOLUTION FOUND, 1 of 40 [6 4 2 0 5 3 1]
-% ITERATION: 3 TIME: 0
-% SOLUTION FOUND, 2 of 40 [4 2 0 5 3 1 6]
-% ITERATION: 4 TIME: 1
-% SOLUTION FOUND, 3 of 40 [5 1 4 0 3 6 2]
-% ITERATION: 4 TIME: 1
-% SOLUTION FOUND, 4 of 40 [3 6 4 1 5 0 2]
-% ITERATION: 7 TIME: 2
-% SOLUTION FOUND, 5 of 40 [4 1 5 2 6 3 0]
-% ITERATION: 7 TIME: 2
-% SOLUTION FOUND, 6 of 40 [3 5 0 2 4 6 1]
-% ITERATION: 12 TIME: 4
-% SOLUTION FOUND, 7 of 40 [1 4 2 0 6 3 5]
-% ITERATION: 15 TIME: 5
-% SOLUTION FOUND, 8 of 40 [5 2 0 3 6 4 1]
-% ITERATION: 24 TIME: 8
-% SOLUTION FOUND, 9 of 40 [6 1 3 5 0 2 4]
-% ITERATION: 28 TIME: 10
-% SOLUTION FOUND, 10 of 40 [3 1 6 4 2 0 5]
-% ITERATION: 28 TIME: 10
-% SOLUTION FOUND, 11 of 40 [2 6 1 3 5 0 4]
-% ITERATION: 28 TIME: 10
-% SOLUTION FOUND, 12 of 40 [5 2 6 3 0 4 1]
-% ITERATION: 28 TIME: 10
-% SOLUTION FOUND, 13 of 40 [2 6 3 0 4 1 5]
-% ITERATION: 37 TIME: 13
-% SOLUTION FOUND, 14 of 40 [0 3 6 2 5 1 4]
-% ITERATION: 40 TIME: 14
-% SOLUTION FOUND, 15 of 40 [0 5 3 1 6 4 2]
-% ITERATION: 41 TIME: 14
-% SOLUTION FOUND, 16 of 40 [1 6 4 2 0 5 3]
-% ITERATION: 41 TIME: 14
-% SOLUTION FOUND, 17 of 40 [2 0 5 3 1 6 4]
-% ITERATION: 52 TIME: 19
-% SOLUTION FOUND, 18 of 40 [4 6 1 5 2 0 3]
-% ITERATION: 54 TIME: 19
-% SOLUTION FOUND, 19 of 40 [0 2 4 6 1 3 5]
-% ITERATION: 62 TIME: 22
-% SOLUTION FOUND, 20 of 40 [1 4 0 3 6 2 5]
-% ITERATION: 63 TIME: 23
-% SOLUTION FOUND, 21 of 40 [1 4 6 3 0 2 5]
-% ITERATION: 67 TIME: 24
-% SOLUTION FOUND, 22 of 40 [4 0 3 6 2 5 1]
-% ITERATION: 67 TIME: 24
-% SOLUTION FOUND, 23 of 40 [4 6 1 3 5 0 2]
-% ITERATION: 70 TIME: 25
-% SOLUTION FOUND, 24 of 40 [1 3 0 6 4 2 5]
-% ITERATION: 71 TIME: 26
-% SOLUTION FOUND, 25 of 40 [5 0 2 4 6 1 3]
-% ITERATION: 75 TIME: 27
-% SOLUTION FOUND, 26 of 40 [4 0 5 3 1 6 2]
-% ITERATION: 83 TIME: 30
-% SOLUTION FOUND, 27 of 40 [6 3 0 4 1 5 2]
-% ITERATION: 92 TIME: 33
-% SOLUTION FOUND, 28 of 40 [5 3 1 6 4 2 0]
-% ITERATION: 96 TIME: 35
-% SOLUTION FOUND, 29 of 40 [1 3 5 0 2 4 6]
-% ITERATION: 110 TIME: 40
-% SOLUTION FOUND, 30 of 40 [5 3 6 0 2 4 1]
-% ITERATION: 121 TIME: 44
-% SOLUTION FOUND, 31 of 40 [1 5 2 6 3 0 4]
-% ITERATION: 123 TIME: 45
-% SOLUTION FOUND, 32 of 40 [6 2 5 1 4 0 3]
-% ITERATION: 124 TIME: 45
-% SOLUTION FOUND, 33 of 40 [5 2 4 6 0 3 1]
-% ITERATION: 164 TIME: 60
-% SOLUTION FOUND, 34 of 40 [2 0 5 1 4 6 3]
-% ITERATION: 196 TIME: 72
-% SOLUTION FOUND, 35 of 40 [3 0 2 5 1 6 4]
-% ITERATION: 211 TIME: 77
-% SOLUTION FOUND, 36 of 40 [2 5 1 4 0 3 6]
-% ITERATION: 227 TIME: 83
-% SOLUTION FOUND, 37 of 40 [3 6 2 5 1 4 0]
-% ITERATION: 231 TIME: 85
-% SOLUTION FOUND, 38 of 40 [2 4 6 1 3 5 0]
-% ITERATION: 278 TIME: 102
-% SOLUTION FOUND, 39 of 40 [3 0 4 1 5 2 6]
-% ITERATION: 382 TIME: 141
-% Found 382 iterations, 141 seconds, 3129344 TOTAL INDIVIDUALS
-
-% BOARD SIZE 8
-% SOLUTION FOUND, 1 of 92 [3 6 2 7 1 4 0 5]
-% ITERATION: 14 TIME: 5
-% SOLUTION FOUND, 2 of 92 [4 0 7 3 1 6 2 5]
-% ITERATION: 27 TIME: 11
-% SOLUTION FOUND, 3 of 92 [3 1 7 4 6 0 2 5]
-% ITERATION: 98 TIME: 41
-% SOLUTION FOUND, 4 of 92 [2 7 3 6 0 5 1 4]
-% ITERATION: 128 TIME: 54
-% SOLUTION FOUND, 5 of 92 [6 3 1 7 5 0 2 4]
-% ITERATION: 164 TIME: 70
-% SOLUTION FOUND, 6 of 92 [0 6 4 7 1 3 5 2]
-% ITERATION: 172 TIME: 73
-% SOLUTION FOUND, 7 of 92 [2 5 1 4 7 0 6 3]
-% ITERATION: 231 TIME: 99
-% SOLUTION FOUND, 8 of 92 [6 4 2 0 5 7 1 3]
-% ITERATION: 247 TIME: 106
-% SOLUTION FOUND, 9 of 92 [5 1 6 0 2 4 7 3]
-% ITERATION: 262 TIME: 112
-% SOLUTION FOUND, 10 of 92 [5 1 6 0 3 7 4 2]
-% ITERATION: 288 TIME: 123
-% SOLUTION FOUND, 11 of 92 [5 2 4 6 0 3 1 7]
-% ITERATION: 317 TIME: 136
-% SOLUTION FOUND, 12 of 92 [2 5 7 1 3 0 6 4]
-% ITERATION: 325 TIME: 139
-% SOLUTION FOUND, 13 of 92 [3 1 6 4 0 7 5 2]
-% ITERATION: 328 TIME: 140
-% SOLUTION FOUND, 14 of 92 [4 2 0 5 7 1 3 6]
-% ITERATION: 344 TIME: 147
-% SOLUTION FOUND, 15 of 92 [2 5 1 6 4 0 7 3]
-% ITERATION: 375 TIME: 160
-% SOLUTION FOUND, 16 of 92 [2 4 6 0 3 1 7 5]
-% ITERATION: 385 TIME: 164
-% SOLUTION FOUND, 17 of 92 [3 7 0 4 6 1 5 2]
-% ITERATION: 419 TIME: 179
-% SOLUTION FOUND, 18 of 92 [6 0 2 7 5 3 1 4]
-% ITERATION: 473 TIME: 202
-% SOLUTION FOUND, 19 of 92 [7 1 3 0 6 4 2 5]
-% ITERATION: 491 TIME: 210
-% SOLUTION FOUND, 20 of 92 [1 3 5 7 2 0 6 4]
-% ITERATION: 574 TIME: 245
-% SOLUTION FOUND, 21 of 92 [5 0 4 1 7 2 6 3]
-% ITERATION: 586 TIME: 250
-% SOLUTION FOUND, 22 of 92 [7 3 0 2 5 1 6 4]
-% ITERATION: 626 TIME: 267
-% SOLUTION FOUND, 23 of 92 [5 3 6 0 2 4 1 7]
-% ITERATION: 656 TIME: 280
-% SOLUTION FOUND, 24 of 92 [2 4 1 7 0 6 3 5]
-% ITERATION: 657 TIME: 280
-% SOLUTION FOUND, 25 of 92 [7 1 4 2 0 6 3 5]
-% ITERATION: 725 TIME: 309
-% SOLUTION FOUND, 26 of 92 [3 1 6 2 5 7 4 0]
-% ITERATION: 765 TIME: 326
-% SOLUTION FOUND, 27 of 92 [4 7 3 0 2 5 1 6]
-% ITERATION: 779 TIME: 332
-% SOLUTION FOUND, 28 of 92 [6 1 5 2 0 3 7 4]
-% ITERATION: 806 TIME: 344
-% SOLUTION FOUND, 29 of 92 [3 0 4 7 1 6 2 5]
-% ITERATION: 931 TIME: 407
-% SOLUTION FOUND, 30 of 92 [5 2 6 1 3 7 0 4]
-% ITERATION: 941 TIME: 411
-% SOLUTION FOUND, 31 of 92 [2 4 7 3 0 6 1 5]
-% ITERATION: 949 TIME: 415
-% SOLUTION FOUND, 32 of 92 [3 6 4 1 5 0 2 7]
-% ITERATION: 1062 TIME: 465
-% SOLUTION FOUND, 33 of 92 [6 2 0 5 7 4 1 3]
-% ITERATION: 1071 TIME: 468
-% SOLUTION FOUND, 34 of 92 [5 7 1 3 0 6 4 2]
-% ITERATION: 1135 TIME: 496
-% SOLUTION FOUND, 35 of 92 [5 2 4 7 0 3 1 6]
-% ITERATION: 1164 TIME: 508
-% SOLUTION FOUND, 36 of 92 [4 1 5 0 6 3 7 2]
-% ITERATION: 1207 TIME: 526
-% SOLUTION FOUND, 37 of 92 [1 5 7 2 0 3 6 4]
-% ITERATION: 1283 TIME: 559
-% SOLUTION FOUND, 38 of 92 [4 6 1 3 7 0 2 5]
-% ITERATION: 1291 TIME: 562
-% SOLUTION FOUND, 39 of 92 [5 3 1 7 4 6 0 2]
-% ITERATION: 1347 TIME: 586
-% SOLUTION FOUND, 40 of 92 [5 3 6 0 7 1 4 2]
-% ITERATION: 1363 TIME: 593
-% SOLUTION FOUND, 41 of 92 [5 2 0 7 3 1 6 4]
-% ITERATION: 1376 TIME: 598
-% SOLUTION FOUND, 42 of 92 [2 5 3 0 7 4 6 1]
-% ITERATION: 1384 TIME: 601
-% SOLUTION FOUND, 43 of 92 [4 2 0 6 1 7 5 3]
-% ITERATION: 1403 TIME: 609
-% SOLUTION FOUND, 44 of 92 [1 4 6 3 0 7 5 2]
-% ITERATION: 1508 TIME: 654
-% SOLUTION FOUND, 45 of 92 [4 1 7 0 3 6 2 5]
-% ITERATION: 1588 TIME: 688
-% SOLUTION FOUND, 46 of 92 [1 6 4 7 0 3 5 2]
-% ITERATION: 1635 TIME: 708
-% SOLUTION FOUND, 47 of 92 [4 0 7 5 2 6 1 3]
-% ITERATION: 1748 TIME: 758
-% SOLUTION FOUND, 48 of 92 [2 5 3 1 7 4 6 0]
-% ITERATION: 1757 TIME: 762
-% SOLUTION FOUND, 49 of 92 [2 6 1 7 4 0 3 5]
-% ITERATION: 1818 TIME: 789
-% SOLUTION FOUND, 50 of 92 [6 2 7 1 4 0 5 3]
-% ITERATION: 1823 TIME: 791
-% SOLUTION FOUND, 51 of 92 [4 1 3 6 2 7 5 0]
-% ITERATION: 1859 TIME: 807
-% SOLUTION FOUND, 52 of 92 [3 7 0 2 5 1 6 4]
-% ITERATION: 1865 TIME: 809
-% SOLUTION FOUND, 53 of 92 [3 7 4 2 0 6 1 5]
-% ITERATION: 1953 TIME: 847
-% SOLUTION FOUND, 54 of 92 [5 3 0 4 7 1 6 2]
-% ITERATION: 1955 TIME: 848
-% SOLUTION FOUND, 55 of 92 [1 5 0 6 3 7 2 4]
-% ITERATION: 1956 TIME: 848
-% SOLUTION FOUND, 56 of 92 [6 1 3 0 7 4 2 5]
-% ITERATION: 2050 TIME: 888
-% SOLUTION FOUND, 57 of 92 [1 4 6 0 2 7 5 3]
-% ITERATION: 2192 TIME: 949
-% SOLUTION FOUND, 58 of 92 [4 1 3 5 7 2 0 6]
-% ITERATION: 2221 TIME: 961
-% SOLUTION FOUND, 59 of 92 [4 6 1 5 2 0 7 3]
-% ITERATION: 2256 TIME: 976
-% SOLUTION FOUND, 60 of 92 [1 6 2 5 7 4 0 3]
-% ITERATION: 2291 TIME: 991
-% SOLUTION FOUND, 61 of 92 [3 1 6 2 5 7 0 4]
-% ITERATION: 2595 TIME: 1121
-% SOLUTION FOUND, 62 of 92 [0 4 7 5 2 6 1 3]
-% ITERATION: 2887 TIME: 1246
-% SOLUTION FOUND, 63 of 92 [5 2 6 1 7 4 0 3]
-% ITERATION: 2979 TIME: 1285
-% SOLUTION FOUND, 64 of 92 [3 6 0 7 4 1 5 2]
-% ITERATION: 2987 TIME: 1289
-% SOLUTION FOUND, 65 of 92 [4 6 0 2 7 5 3 1]
-% ITERATION: 3050 TIME: 1316
-% SOLUTION FOUND, 66 of 92 [4 2 7 3 6 0 5 1]
-% ITERATION: 3116 TIME: 1344
-% SOLUTION FOUND, 67 of 92 [2 5 7 0 4 6 1 3]
-% ITERATION: 3128 TIME: 1349
-% SOLUTION FOUND, 68 of 92 [2 0 6 4 7 1 3 5]
-% ITERATION: 3190 TIME: 1376
-% SOLUTION FOUND, 69 of 92 [4 7 3 0 6 1 5 2]
-% ITERATION: 3359 TIME: 1448
-% SOLUTION FOUND, 70 of 92 [2 5 1 6 0 3 7 4]
-% ITERATION: 3425 TIME: 1476
-% SOLUTION FOUND, 71 of 92 [0 6 3 5 7 1 4 2]
-% ITERATION: 3442 TIME: 1483
-% SOLUTION FOUND, 72 of 92 [3 1 4 7 5 0 2 6]
-% ITERATION: 3462 TIME: 1492
-% SOLUTION FOUND, 73 of 92 [2 4 1 7 5 3 6 0]
-% ITERATION: 3473 TIME: 1497
-% SOLUTION FOUND, 74 of 92 [5 2 0 6 4 7 1 3]
-% ITERATION: 4047 TIME: 1743
-% SOLUTION FOUND, 75 of 92 [3 0 4 7 5 2 6 1]
-% ITERATION: 4060 TIME: 1749
-% SOLUTION FOUND, 76 of 92 [7 2 0 5 1 4 6 3]
-% ITERATION: 4212 TIME: 1814
-% SOLUTION FOUND, 77 of 92 [3 5 7 2 0 6 4 1]
-% ITERATION: 4258 TIME: 1833
-% SOLUTION FOUND, 78 of 92 [5 2 0 7 4 1 3 6]
-% ITERATION: 4373 TIME: 1883
-% SOLUTION FOUND, 79 of 92 [4 0 3 5 7 1 6 2]
-% ITERATION: 4512 TIME: 1942
-% SOLUTION FOUND, 80 of 92 [3 6 4 2 0 5 7 1]
-% ITERATION: 4646 TIME: 2000
-% SOLUTION FOUND, 81 of 92 [3 5 0 4 1 7 2 6]
-% ITERATION: 5188 TIME: 2232
-% SOLUTION FOUND, 82 of 92 [0 5 7 2 6 3 1 4]
-% ITERATION: 5475 TIME: 2355
-% SOLUTION FOUND, 83 of 92 [5 2 6 3 0 7 1 4]
-% ITERATION: 5479 TIME: 2357
-% SOLUTION FOUND, 84 of 92 [4 6 0 3 1 7 5 2]
-% ITERATION: 5784 TIME: 2486
-% SOLUTION FOUND, 85 of 92 [4 6 1 5 2 0 3 7]
-% ITERATION: 5843 TIME: 2511
-% SOLUTION FOUND, 86 of 92 [2 6 1 7 5 3 0 4]
-% ITERATION: 6253 TIME: 2690
-% SOLUTION FOUND, 87 of 92 [1 7 5 0 2 4 6 3]
-% ITERATION: 6341 TIME: 2729
-% SOLUTION FOUND, 88 of 92 [3 5 7 1 6 0 2 4]
-% ITERATION: 7072 TIME: 3046
-% SOLUTION FOUND, 89 of 92 [6 3 1 4 7 0 2 5]
-% ITERATION: 7391 TIME: 3181
-% SOLUTION FOUND, 90 of 92 [4 6 3 0 2 7 5 1]
-% ITERATION: 7698 TIME: 3311
-% SOLUTION FOUND, 91 of 92 [2 5 7 0 3 6 4 1]
-% ITERATION: 8334 TIME: 3581
-% Found 8334 iterations, 3581 seconds, 68272128 TOTAL INDIVIDUALS
 
 
 \section{Discussion}
