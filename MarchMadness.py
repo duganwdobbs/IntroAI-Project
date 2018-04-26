@@ -1,15 +1,17 @@
 import numpy      as np
 import random
 import math
+import datetime
 # Flags:
 #       Board Size
-board_size = 20
+board_size = 11
 #       Population Size
 pop_size   = 10000
 
 # Number of solutions for n queens, credit https://oeis.org/A002562
 num_sols = [1, 0, 0, 2, 10, 4, 40, 92, 352, 724, 2680, 14200, 73712, 365596, 2279184, 14772512, 95815104, 666090624, 4968057848, 39029188884, 314666222712, 2691008701644, 24233937684440, 227514171973736, 2207893435808352, 22317699616364044, 234907967154122528]
 times = []
+iterations = []
 global solutions
 solutions = []
 
@@ -25,7 +27,7 @@ def init_states(board_size,pop_size):
   population = population.astype(np.int32)
   return population
 
-def gen_fitness(population):
+def gen_fitness(start,iter,population):
   population = np.array(population)
   max_clash = (nCr(board_size,2))
   # fitness = # of horiz + diag clashes of this queen to end queen iterative
@@ -45,9 +47,12 @@ def gen_fitness(population):
     if fitness[x] == max_clash:
       if not in_solutions(population[x]):
         print("SOLUTION FOUND, %d of %d"%(len(solutions)+1,num_sols[board_size-1]),end=' ')
+        delta = datetime.datetime.now() - start
+        times.append(delta.seconds)
+        iterations.append(iter)
         print(population[x])
         solutions.append(population[x])
-        # [print(solution) for solution in solutions]
+
       else:
         # Solution is found, fitness is 0. Won't be picked as a parent.
         fitness[x] = 0
@@ -180,21 +185,26 @@ def double_mutation(child):
 def main():
   population = init_states(board_size,pop_size)
   iter = 0
-  while len(solutions) +1 < num_sols[board_size-1] :
-    iter += 1
-    fitness = []
-    fitness = gen_fitness(population)
+  try:
+    while len(solutions)  < num_sols[board_size-1] :
+      iter += 1
+      fitness = []
+      fitness = gen_fitness(start,iter,population)
 
-    children = march_madness(fitness,population)
+      children = march_madness(fitness,population)
 
-    # inds     = [[selection_tournament(fitness,2),selection_tournament(fitness,2)] for x in range(len(fitness) // 2)]
-    # children = [crossover_3tournament(ind,population) for ind in inds]
+      # inds     = [[selection_tournament(fitness,2),selection_tournament(fitness,2)] for x in range(len(fitness) // 2)]
+      # children = [crossover_3tournament(ind,population) for ind in inds]
 
-    children = [single_mutation(child) for child in children]
-    if iter%100 == 0:
-      print("Iteration %d"%iter)
-    population = children
+      children = [single_mutation(child) for child in children]
+      if iter%100 == 0:
+        print("Iteration %d"%iter)
+      population = children
+  except:
+    pass
   [print(solution) for solution in solutions]
+  print("Times: ",times)
+  print("Iterations: ",iterations)
   print("FOUND IN %d ITERATIONS, %d TOTAL INDIVIDUALS"%(iter,iter * pop_size))
 
 main()
