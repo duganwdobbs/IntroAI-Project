@@ -185,7 +185,9 @@ def double_mutation(child):
 def main():
   population = init_states(board_size,pop_size)
   iter = 0
+  start = datetime.datetime.now()
   try:
+    print(len(solutions),num_sols[board_size-1])
     while len(solutions)  < num_sols[board_size-1] :
       iter += 1
       fitness = []
@@ -200,7 +202,7 @@ def main():
       if iter%100 == 0:
         print("Iteration %d"%iter)
       population = children
-  except:
+  except KeyboardInterrupt:
     pass
   [print(solution) for solution in solutions]
   print("Times: ",times)
