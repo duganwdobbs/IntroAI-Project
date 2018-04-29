@@ -6,16 +6,12 @@ import datetime
 #       Board Size
 board_size = 8
 #       Population Size
-pop_size   = 10000
+pop_size   = int(math.log2(10000))
 
 # Number of solutions for n queens, credit https://oeis.org/A002562
 num_sols = [1, 0, 0, 2, 10, 4, 40, 92, 352, 724, 2680, 14200, 73712, 365596, 2279184, 14772512, 95815104, 666090624, 4968057848, 39029188884, 314666222712, 2691008701644, 24233937684440, 227514171973736, 2207893435808352, 22317699616364044, 234907967154122528]
-times = []
-iterations = []
-global solutions
-solutions = []
 
-global tourn_size
+
 tourn_size = int(math.log2(pop_size - 1)) + 2
 
 def nCr(n,r):
@@ -27,7 +23,7 @@ def init_states(board_size,pop_size):
   population = population.astype(np.int32)
   return population
 
-def gen_fitness(start,iter,population):
+def gen_fitness(start,iter,population,solutions,times,iterations):
   population = np.array(population)
   max_clash = (nCr(board_size,2))
   # fitness = # of horiz + diag clashes of this queen to end queen iterative
@@ -45,12 +41,12 @@ def gen_fitness(start,iter,population):
   fitness = max_clash - clashes
   for x in range(len(fitness)):
     if fitness[x] == max_clash:
-      if not in_solutions(population[x]):
-        print("SOLUTION FOUND, %d of %d"%(len(solutions)+1,num_sols[board_size-1]),end=' ')
+      if not in_solutions(population[x],solutions):
+        # print("SOLUTION FOUND, %d of %d"%(len(solutions)+1,num_sols[board_size-1]),end=' ')
         delta = datetime.datetime.now() - start
         times.append(delta.seconds)
         iterations.append(iter)
-        print(population[x])
+        # print(population[x])
         solutions.append(population[x])
 
       else:
@@ -68,7 +64,7 @@ def to_dec(state):
 def equals(state1,state2):
   return to_dec(state1) == to_dec(state2)
 
-def in_solutions(state):
+def in_solutions(state,solutions):
   if solutions is None:
     return False
   for solution in solutions:
@@ -101,10 +97,13 @@ def crossover_3tournament(inds,population):
         child[y] = parent1[y]
     childs.append(child)
   temp = []
+  returns = []
   for child in childs:
     for single in child:
       temp.append(single)
-  return temp
+    returns.append(temp)
+    temp = []
+  return returns
 
 def march_madness(fitness,population):
   global pop_size # We need to change this global, not make a new one.
@@ -183,30 +182,34 @@ def double_mutation(child):
   return child
 
 def main():
+  solutions = []
+  times = []
+  iterations = []
+
   population = init_states(board_size,pop_size)
   iter = 0
   start = datetime.datetime.now()
   try:
-    print(len(solutions),num_sols[board_size-1])
     while len(solutions)  < num_sols[board_size-1] :
       iter += 1
       fitness = []
-      fitness = gen_fitness(start,iter,population)
+      fitness = gen_fitness(start,iter,population,solutions,times,iterations)
 
-      children = march_madness(fitness,population)
-
-      # inds     = [[selection_tournament(fitness,2),selection_tournament(fitness,2)] for x in range(len(fitness) // 2)]
-      # children = [crossover_3tournament(ind,population) for ind in inds]
+      inds     = [[selection_tournament(fitness,2),selection_tournament(fitness,2)] for x in range(len(fitness))]
+      children = [crossover_3tournament(ind,population) for ind in inds]
+      childs = []
+      children = [[childs.append(children[x][y]) for y in range(2)] for x in range(len(children))]
+      children = np.squeeze(childs)
 
       children = [single_mutation(child) for child in children]
-      if iter%100 == 0:
-        print("Iteration %d"%iter)
+      # if iter%100 == 0:
+      #   print("Iteration %d"%iter)
       population = children
   except KeyboardInterrupt:
     pass
-  [print(solution) for solution in solutions]
-  print("Times: ",times)
+  # [print(solution) for solution in solutions]
+  print("Times: "     ,times     )
   print("Iterations: ",iterations)
-  print("FOUND IN %d ITERATIONS, %d TOTAL INDIVIDUALS"%(iter,iter * pop_size))
-
-main()
+  # print("FOUND IN %d ITERATIONS, %d TOTAL INDIVIDUALS"%(iter,iter * pop_size))
+for x in range(10):
+  main()
