@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from math import factorial as f
 from math import log
 import matplotlib.patches as mpatches
+import numpy as np
 
 def nCr(n,r):
   return f(n) // (f(r) * f(n-r))
